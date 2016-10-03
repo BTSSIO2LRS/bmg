@@ -80,27 +80,33 @@ class Evenement
     /**
      * Mutateurs
      */
-    public function setId ($p_id) {
+    public function setId ($p_id) 
+    {
         $this->_id = $p_id;
     }
     
-    public function setNo_Client ($p_no_client) {
+    public function setNo_Client ($p_no_client) 
+    {
         $this->_no_client = $p_no_client;
     }
     
-    public function setDate ($p_date) {
+    public function setDate ($p_date) 
+    {
         $this->_date = $p_date;
     }
     
-    public function setType ($p_type) {
+    public function setType ($p_type) 
+    {
         $this->_type = $p_type;
     }
     
-    public function setId_Pret ($p_id) {
+    public function setId_Pret ($p_id) 
+    {
         $this->_id_pret = $p_id_pret;
     }
     
-    public function setDesc ($p_desc) {
+    public function setDesc ($p_desc) 
+    {
         $this->_desc = $p_desc;
     }
 }
