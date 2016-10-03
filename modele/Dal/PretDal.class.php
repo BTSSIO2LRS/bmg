@@ -33,7 +33,7 @@ class PretDal {
     }
     
     /**
-     * loadGenericPret est une fonction générique de charger de prêts
+     * loadGenericPret est une fonction générique permettant de charger de prêts
      * @param int $mode 0 => charge tous les prêts de tous les clients avec etat optionel, 1 => charge un 
      * prêts par id, 2 => charge tous les prêts d'un clients par etat
      * @param array $arrayParams si mode 0 donné un état de prêts (voir config.inc.php), si mode 1 mettre
