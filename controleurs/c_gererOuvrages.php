@@ -48,19 +48,32 @@ switch ($action) {
         }
     } break;
     case 'ajouterOuvrage' : {
+        
         // initialisation des variables
         $hasErrors = false;
         $strTitre = '';
         $intSalle = 1;        
         $strRayon = '';
         $strDate =  '';
-        $rq = Genres::chargerLesGenres(0);
+        
+        // On charge les genres pour les lister afin de pouvoir sélectionner le genre de l'ouvrage
+        $chargeLesGenres = Genres::chargerLesGenres(1);
         $lesGenres = array();
-        foreach($rq as $values)
+        foreach($chargeLesGenres as $values)
         {
-            $lesGenres[$values->code_genre] = $values->lib_genre;
+            $lesGenres[$values->getCode()] = $values->getLibelle();
         }
-        $strGenre = $rq[1]->code_genre;
+        $strGenre = Utilities::firstOccur($lesGenres, 1);
+        
+        // On charge les auteurs pour les lister afin de pouvoir sélectionner l'auteur de l'ouvrage
+        $chargeLesAuteurs = Auteurs::chargerLesAuteurs(1);
+        $lesAuteurs = array();
+        foreach($chargeLesAuteurs as $values)
+        {
+            $lesAuteurs[$values->getId()] = $values->decrireAuteur();
+        }
+        $strAuteur = Utilities::firstOccur($lesAuteurs, 1);
+        
         // traitement de l'option : saisie ou validation ?
         if (isset($_GET["option"])) {
             $option = htmlentities($_GET["option"]);
@@ -79,7 +92,7 @@ switch ($action) {
                     $data = testDataOuvrage($_POST);
                     if (is_array($data)) {
                         // ajout dans la base de données
-                        $unOuvrage = Ouvrages::ajouterOuvrage(array($data["titre"],$data["salle"],$data["rayon"],$data["genre"],$data["date"]));
+                        $unOuvrage = Ouvrages::ajouterOuvrage(array($data["titre"], $data["salle"], $data["rayon"], $data["auteur"], $data["genre"], $data["date"]));
                         Application::addNotification(new Notification("L'ouvrage à été ajouté !", SUCCESS));
                         initDisplayOuvrage($unOuvrage, 'vues/v_consulterOuvrage.php');
                     }
@@ -149,21 +162,21 @@ switch ($action) {
             }
         }
     } break;
-    case 'supprimerGenre' : {
+    case 'supprimerOuvrage' : {
         // rechercher des ouvrages de ce genre
-        if (Genres::nbOuvragesParGenre($unGenre->getCode()) > 0) {
-            // il y a des ouvrages référencés, suppression impossible
-            Application::addNotification(new Notification("Il existe des ouvrages qui référencent ce genre, suppression impossible !", ERROR));
-            include 'vues/v_consulterGenre.php';
+        if (isset($unOuvrage) ) {
+           // supprimer le genre
+            Ouvrages::supprimerOuvrage($unGenre->getCode());
+            Application::addNotification(new Notification("L'ouvrage a été supprimé !", SUCCESS));
+            // afficher la liste
+            $lesOuvrages = Ouvrages::chargerLesOuvrages(1);
+            $nbOuvrages = count($lesOuvrages);
+            include 'vues/v_listeOuvrages.php';
         }
         else {
-            // supprimer le genre
-            Genres::supprimerGenre($unGenre->getCode());
-            Application::addNotification(new Notification("Le genre a été supprimé !", SUCCESS));
-            // afficher la liste
-            $lesGenres = Genres::chargerLesGenres(1);
-            $nbGenres = count($lesGenres);
-            include 'vues/v_listeGenres.php';            
+             // il y a des ouvrages référencés, suppression impossible
+            Application::addNotification(new Notification("Il existe des ouvrages qui référencent ce genre, suppression impossible !", ERROR));
+            include 'vues/v_consulterGenre.php';
         }
     } break;   
 }
@@ -209,6 +222,7 @@ function testDataOuvrage($data)
     if (!empty($data["txtTitre"]) and
         !empty($data["rbnSalle"]) and
         !empty($data["txtRayon"]) and
+        !empty($data["cbxAuteurs"])and
         !empty($data["cbxGenres"])and
         !empty($data["txtDate"])) {
         // les zones obligatoires sont présentes
@@ -240,6 +254,15 @@ function testDataOuvrage($data)
         {
             Application::addNotification(new Notification("Le genre :".$_POST["cbxGenres"]." séléctionné n'existe pas !", ERROR));
         } 
+        
+        if(Auteurs::AuteurExiste($data["cbxAuteurs"]))
+        {
+            $dataOuvrage["auteur"] = $data["cbxAuteurs"];
+        }
+        else
+        {
+            Application::addNotification(new Notification("L'auteur :".$_POST["cbxAuteurs"]." séléctionné n'existe pas !", ERROR));
+        } 
 
         if(strtotime($data["txtDate"]) <= strtotime(date('Y-m-d')))
         {
@@ -263,12 +286,15 @@ function testDataOuvrage($data)
         }
         if (empty($data["cbxGenres"])) {
             Application::addNotification(new Notification("Le genre doit être renseigné !", ERROR));
+        } 
+        if (empty($data["cbxAuteurs"])) {
+            Application::addNotification(new Notification("Le'auteur doit être renseigné !", ERROR));
         }
         if(empty($data["txtDate"])){
             Application::addNotification(new Notification("La date doit être renseigné !", ERROR));
         }
     }
-    if(count($dataOuvrage)==5)
+    if(count($dataOuvrage)==6)
     {
         return $dataOuvrage;
     }
