@@ -163,20 +163,30 @@ switch ($action) {
         }
     } break;
     case 'supprimerOuvrage' : {
-        // rechercher des ouvrages de ce genre
+        
         if (isset($unOuvrage) ) {
-           // supprimer le genre
-            Ouvrages::supprimerOuvrage($unGenre->getCode());
-            Application::addNotification(new Notification("L'ouvrage a été supprimé !", SUCCESS));
-            // afficher la liste
-            $lesOuvrages = Ouvrages::chargerLesOuvrages(1);
-            $nbOuvrages = count($lesOuvrages);
-            include 'vues/v_listeOuvrages.php';
+           // supprimer l'ouvrage
+            
+            if(Ouvrages::supprimerOuvrage($unOuvrage->getNo()))
+            {
+                Application::addNotification(new Notification("L'ouvrage a été supprimé !", SUCCESS));
+                // afficher la liste
+                $lesOuvrages = Ouvrages::chargerLesOuvrages(0);
+                $nbOuvrages = count($lesOuvrages);
+                include 'vues/v_listeOuvrages.php';
+            }
+            else {
+               // la requête à retourner une PDO_EXCEPTION
+               Application::addNotification(new Notification("La requéte à malheureusement échoué", ERROR));
+               $unOuvrage = Ouvrages::chargerOuvrageParID($unOuvrage->getNo());
+               include 'vues/v_consulterOuvrage.php';
+            }
         }
         else {
-             // il y a des ouvrages référencés, suppression impossible
-            Application::addNotification(new Notification("Il existe des ouvrages qui référencent ce genre, suppression impossible !", ERROR));
-            include 'vues/v_consulterGenre.php';
+            // l'ouvrage n'existe pas
+            Application::addNotification(new Notification("La requéte à malheureusement échoué", ERROR));
+            $unOuvrage = Ouvrages::chargerOuvrageParID($unOuvrage->getNo());
+            include 'vues/v_consulterOuvrage.php';
         }
     } break;   
 }
