@@ -144,12 +144,17 @@ class OuvrageDal {
     */      
     public static function delOuvrage($code) {
         $cnx = new PdoDao();
-        $qry = 'DELETE FROM ouvrage WHERE no_ouvrage = ?';
+        $qry = 'DELETE FROM auteur_ouvrage WHERE no_ouvrage = ?';
         $res = $cnx->execSQL($qry,array($code));
         if (is_a($res,'PDOException')) {
             return PDO_EXCEPTION_VALUE;
         }
-        return $res;
+        $q = 'DELETE FROM ouvrage WHERE no_ouvrage = 1';
+        $r = $cnx->execSQL($qry,array($code));
+        if (is_a($r,'PDOException')) {
+            return PDO_EXCEPTION_VALUE;
+        }
+        return $r;
     }    
 
     /**
