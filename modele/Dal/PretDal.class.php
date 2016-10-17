@@ -19,26 +19,12 @@ require_once ('PdoDao.class.php');
 class PretDal {
     
     /**
-     * @param  $style : 0 == tableau assoc, 1 == objet
-     * @return  un objet de la classe PDOStatement
-    */ 
-    public static function loadPrets($style) {
-        $cnx = new PdoDao();
-        $qry = 'SELECT * FROM pret';
-        $res = $cnx->getRows($qry,array(),$style);
-        if (is_a($res,'PDOException')) {
-            return PDO_EXCEPTION_VALUE;
-        }        
-        return $res;
-    }
-    
-    /**
      * loadGenericPret est une fonction générique permettant de charger de prêts
      * @param int $mode 0 => charge tous les prêts de tous les clients avec etat optionel, 1 => charge un 
      * prêts par id, 2 => charge tous les prêts d'un clients par etat
      * @param array $arrayParams si mode 0 donné un état de prêts (voir config.inc.php), si mode 1 mettre
      * un id de pret dans le tableau, si mode 2 mettre un numéro de client et un état de prêts (voir config.inc.php)
-     * @return mixed 
+     * @return le résultat d'une requête 
      */
     public static function loadGenericPret($mode,$arrayParams) {
         
@@ -70,31 +56,20 @@ class PretDal {
                     $id = $arrayParams[0];
                     $etat = $arrayParams[1];
                 }
+                elseif(count($arrayParams)==1)
+                {
+                    $id = $arrayParams[0];
+                }
                 else{
                     return false;
                 }
             }break;
         }
-        $qry = 'CALL sp_pret(?,?)';
+        $qry = 'CALL sp_load_prets(?,?,?)';
         $res = $cnx->getRows($qry, array($mode,$id,$etat), 1);
         if (is_a($res, 'PDOException')) {
             return PDO_EXCEPTION_VALUE;
         }
         return $res;
     }
-    
-    /**
-     * charge un objet de la classe Pret à partir de son id
-     * @param  int	$id : l'identifiant du pret
-     * @return  un objet de la classe Pret
-    */   
-    public static function loadPretById($id) {
-        $cnx = new PdoDao();
-        $qry = 'SELECT * FROM pret WHERE id_pret = ?';
-        $res = $cnx->getRows($qry,array($id),1);
-        if (is_a($res,'PDOException')) {
-            return PDO_EXCEPTION_VALUE;
-        }
-        return $res;
-    }  
 }
