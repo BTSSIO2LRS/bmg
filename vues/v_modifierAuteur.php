@@ -8,6 +8,7 @@
 ?>
 <div id="content">
     <h2>Gestion des auteurs</h2>
+    <?php AdminRender::showNotifications();?>
     <div id="object-list">
         <form action="index.php?uc=gererAuteurs&action=modifierAuteur&option=validerAuteur&id=<?php echo $intID ?>" method="post">
             <div class="corps-form">

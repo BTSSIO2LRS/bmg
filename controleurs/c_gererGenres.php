@@ -8,6 +8,7 @@
 // bibliothèques à utiliser
 require_once ('modele/App/Application.class.php');
 require_once ('modele/App/Notification.class.php');
+require_once ('modele/Render/AdminRender.class.php');
 require_once ('modele/Bll/Genres.class.php');
 
 // récupération de l'action à effectuer
@@ -17,7 +18,6 @@ if (isset($_GET["action"])) {
 else {
     $action = 'listerGenres';
 }
-
 // si un id est passé en paramètre, créer un objet (pour consultation, modification ou suppression)
 if (isset($_REQUEST["id"])) {
     $id = $_REQUEST["id"];

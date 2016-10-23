@@ -10,9 +10,6 @@
  * @package default
 */
 ?>
-
-<?php require_once './render/AdminRender.class.php' ?>
-
 <div id="content">
     <h2>Gestion des genres</h2>
     <?php AdminRender::showNotifications(); ?>
@@ -24,7 +21,8 @@
             <legend>Genres</legend>
             <div id="object-list">
                 <?php
-                echo '<span>'.$nbGenres.' genre(s) trouvé(s)' . '</span><br /><br />';
+                echo '<span>'.$nbGenres.' genre(s) trouvé(s)'
+                        . '</span><br /><br />';
                 // afficher un tableau des genres
                 if ($nbGenres > 0) {
                     // création du tableau

@@ -20,7 +20,7 @@ if (isset($_GET["action"])) {
     $action = $_GET["action"];
 }
 else {
-    $action = 'listerOuvrages';
+    $action = 'listerPrets';
 }
 // si un id est passé en paramètre, créer un objet (pour consultation, modification ou suppression)
 if (isset($_REQUEST["id"])) {
@@ -30,7 +30,7 @@ if (isset($_REQUEST["id"])) {
 
 // charger la vue en fonction du choix de l'utilisateur
 switch ($action) {
-    case 'listerOuvrages' : {
+    case 'listerPrets' : {
         // récupérer les ouvrages
         $lesPrets = Prets::chargerLesPrets(1);
         // afficher le nombre de ouvrages

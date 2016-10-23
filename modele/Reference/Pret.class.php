@@ -9,7 +9,7 @@
  *
  *
  * @package 	default
- * @author 	tp, pv 28/09/2016
+ * @author 	Thomas PETRY, Vincent PHILIPPE 28/09/2016
  * @version    	1.0
  */
 
@@ -82,8 +82,8 @@ class Pret {
         $this->_id = $p_id;
     }
 
-    public function setNoClient ($p_no_client) {
-        $this->_no_client = $p_no_client;
+    public function setNoClient ($p_noClient) {
+        $this->_no_client = $p_noClient;
     }
     
     public function setnoOuvrage ($p_noOuvrage) {

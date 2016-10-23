@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Dal/OuvrageDal.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Reference/Auteur.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/controleurs/c_gererAuteurs.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Render/AdminRender.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/vues/v_auteursOuvrage.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Bll/Prets.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/vues/v_ajouterOuvrage.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/controleurs/c_gererPrets.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/include/_metier.lib.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/vues/v_consulterOuvrage.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/vues/v_listeAuteurs.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Dal/PretDal.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Reference/Ouvrage.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/controleurs/c_gererOuvrages.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/Bll/Auteurs.class.php</file>
+            <file>file:/C:/wamp/www/Mission%205/M5-V3%20GROUP/modele/App/Utilities.class.php</file>
+        </group>
+    </open-files>
+</project-private>

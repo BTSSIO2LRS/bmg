@@ -7,14 +7,16 @@
 ?>
 <div id="content">
     <h2>Gestion des ouvrages</h2>
+    <?php AdminRender::showNotifications();?>
     <div id="object-list">
         <div class="corps-form">
             <fieldset>
                 <legend>Consulter un ouvrage</legend>                        
                 <div id="breadcrumb">
                     <a href="index.php?uc=gererOuvrages&action=ajouterOuvrage">Ajouter</a>&nbsp;
-                    <a href="index.php?uc=gererOuvrages&action=modifierOuvrage&option=saisirOuvrage&id=<?php echo $intID ?>">Modifier</a>&nbsp;
-                    <a href="index.php?uc=gererOuvrages&action=supprimerOuvrage&id=<?php echo $intID ?>">Supprimer</a>
+                    <a href="index.php?uc=gererOuvrages&action=modifierOuvrage&option=saisirOuvrage&id=<?php echo $no ?>">Modifier</a>&nbsp;
+                    <a href="index.php?uc=gererOuvrages&action=supprimerOuvrage&id=<?php echo $no ?>">Supprimer</a>&nbsp;
+                    <a href="index.php?uc=gererOuvrages&action=auteursOuvrage&id=<?php echo $no ?>">Auteurs</a>
                 </div>
                 <table>
                     <tr>
@@ -22,10 +24,10 @@
                             ID :
                         </td>
                         <td class="h-valeur">
-                            <?php echo $intID ?>
+                            <?php echo $no ?>
                         </td>
                         <td class="right h-valeur" rowspan="8">
-                            <?php echo couvertureOuvrage($intID, $strTitre) ?>
+                            <?php echo couvertureOuvrage($no, $strTitre) ?>
                         </td>
                     </tr>
                     <tr>
@@ -41,7 +43,7 @@
                             Auteur(s) :
                         </td>
                         <td class="h-valeur">
-                            <?php echo $strAuteur ?>
+                            <?php echo($strAuteur)?>
                         </td>
                     </tr>                                
                     <tr>
@@ -57,7 +59,7 @@
                             Genre :
                         </td>
                         <td class="h-valeur">
-                            <?php echo $strGenre ?>
+                            <?php echo $strLibGenre ?>
                         </td>
                     </tr>
                     <tr>
@@ -65,7 +67,7 @@
                             Salle et rayon :
                         </td>
                         <td class="h-valeur">
-                            <?php echo $strSalle.', '.$strRayon ?>
+                            <?php echo $intSalle.', '.$strRayon ?>
                         </td>
                     </tr>
                     <tr>

@@ -64,9 +64,6 @@ class Application {
         }
     }
 
-    /**
-     * Réinitialise le tableau des notifications
-    */
     public static function resetNotifications() {
         unset($_SESSION['notifications']);
     }

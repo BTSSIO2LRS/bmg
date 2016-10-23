@@ -8,6 +8,7 @@
 ?>
 <div id="content">
     <h2>Gestion des ouvrages</h2>
+    <?php AdminRender::showNotifications();?>
     <a href="index.php?uc=gererOuvrages&action=ajouterOuvrage" title="Ajouter">
         Ajouter un ouvrage
     </a>
@@ -44,20 +45,20 @@
                         }
                         // afficher la colonne 1 dans un hyperlien
                         echo '<td><a href="index.php?uc=gererOuvrages&action=consulterOuvrage&id='
-                            .$ligne[0].'">'.$ligne[0].'</a></td>';
+                            .$ligne->no_ouvrage.'">'.$ligne->no_ouvrage.'</a></td>';
                         // afficher les colonnes suivantes
-                        echo '<td>'.$ligne[1].'</td>';
-                        echo '<td>'.$ligne[2].'</td>';
-                        if ($ligne[3] == 'Indéterminé') {
-                            echo '<td class="erreur">'.$ligne[3].'</td>';
+                        echo '<td>'.$ligne->titre.'</td>';
+                        echo '<td>'.$ligne->lib_genre.'</td>';
+                        echo '<td>'.$ligne->auteur.'</td>';
+                        echo '<td>'.$ligne->salle.'</td>';
+                        if ($ligne->rayon == 'Indéterminé') {
+                            echo '<td class="erreur">'.$ligne->rayon.'</td>';
                         }
                         else {
-                            echo '<td>'.$ligne[3].'</td>';
+                            echo '<td>'.$ligne->rayon.'</td>';
                         }
-                        echo '<td>'.$ligne[4].'</td>';
-                        echo '<td>'.$ligne[5].'</td>';
-                        echo '<td>'.$ligne[6].'</td>';
-                        if ($ligne[7] == 'D') {
+                        echo '<td>'.$ligne->dernier_pret.'</td>';
+                        if ($ligne->disponibilite == 'D') {
                             echo '<td class="center"><img src="img/dispo.png"</td>';
                         }
                         else {

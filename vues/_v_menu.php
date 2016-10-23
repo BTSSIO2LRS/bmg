@@ -18,6 +18,11 @@
                 </a>
             </li>
             <li class="smenu">
+                <a href="index.php?uc=gererPrets" 
+                   title="Prêts">Gestion des prêts
+                </a>
+            </li>
+            <li class="smenu">
                 <a href="index.php?uc=gererAuteurs"
                    title="Auteurs">Gestion des auteurs
                 </a>
