@@ -1,13 +1,12 @@
 <?php
 /** 
  * Page de gestion des ouvrages
- * @author pv
+ * @author 
  * @package default
 */
 ?>
 <div id="content">
     <h2>Gestion des ouvrages</h2>
-    <?php AdminRender::showNotifications(); ?>
     <div id="object-list">
         <form action="index.php?uc=gererOuvrages&action=ajouterOuvrage&option=validerOuvrage" method="post">
             <div class="corps-form">
@@ -74,19 +73,7 @@
                                     ?>
                                 />
                             </td>
-                        </tr>  
-                        <tr>
-                            <td>
-                                <label for="cbxAuteurs">
-                                    Auteur :
-                                </label>
-                            </td>
-                            <td>
-                                <?php
-                                    afficherListe($lesAuteurs,"cbxAuteurs",$strAuteur,"");
-                                ?>
-                            </td>
-                        </tr>
+                        </tr>                                        
                         <tr>
                             <td>
                                 <label for="cbxGenres">

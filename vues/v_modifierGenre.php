@@ -7,7 +7,6 @@
 ?>
 <div id="content">
     <h2>Gestion des genres</h2>
-    <?php AdminRender::showNotifications();?>
     <div id="object-list">
         <form action="index.php?uc=gererGenres&action=modifierGenre&option=validerGenre" method="post">
             <div class="corps-form">

@@ -1,15 +1,9 @@
 <?php
 /**
  * Contrôleur secondaire chargé de la gestion des auteurs
- * @author  dk, pv
+ * @author  dk
  * @package default (mission 4)
  */
-
-// bibliothèques à utiliser
-require_once ('modele/App/Application.class.php');
-require_once ('modele/App/Notification.class.php');
-require_once ('modele/Render/AdminRender.class.php');
-require_once ('modele/Bll/Auteurs.class.php');
 
 // récupération de l'action à effectuer
 if (isset($_GET["action"])) {
@@ -17,13 +11,6 @@ if (isset($_GET["action"])) {
 }
 else {
     $action = 'listerAuteurs';
-}
-
-
-if(isset($_REQUEST["id"]))
-{
-    $intID = intval(htmlentities($_REQUEST["id"]));
-    $lAuteur = Auteurs::chargerAuteurParId($intID); 
 }
 
 // variables pour la gestion des messages
@@ -34,19 +21,24 @@ $tabErreurs = array();
 $hasErrors = false;
 
 // ouvrir une connexion
-$cnx = new PdoDao();
+$cnx = connectDB();
 
 // charger la vue en fonction du choix de l'utilisateur
 switch ($action) {
     case 'consulterAuteur' : {
         if (isset($_GET["id"])) {
+            $intID = intval(htmlentities($_GET["id"]));
             // récupération des valeurs dans la base
+            $strSQL = "SELECT nom_auteur, prenom_auteur, alias, notes "
+                ."FROM auteur "
+                ."WHERE id_auteur = ?";
             try {
+                $lAuteur = getRows($cnx, $strSQL, array($intID));
                 if ($lAuteur) {
-                    $strNom = $lAuteur->getNom();
-                    $strPrenom = $lAuteur->getPrenom();
-                    $strAlias = $lAuteur->getAlias();
-                    $strNotes = $lAuteur->getNotes();
+                    $strNom = $lAuteur[0][0];
+                    $strPrenom = $lAuteur[0][1];
+                    $strAlias = $lAuteur[0][2];
+                    $strNotes = $lAuteur[0][3];
                 }
                 else {
                     $tabErreurs["Erreur"] = "Cet auteur n'existe pas !";
@@ -118,8 +110,12 @@ switch ($action) {
                     }                    
                     if (!$hasErrors) {
                         // ajout dans la base de données
+                        $strSQL = "INSERT INTO auteur (
+                                        nom_auteur, prenom_auteur, alias, notes
+                                   ) VALUES (?,?,?,?)";
                         try {
-                            $res = Auteurs::ajouterAuteur(array(
+                            $res = execSQL(
+                                $cnx, $strSQL, array(
                                     $strNom,$strPrenom,$strAlias,$strNotes
                                 )
                             );
@@ -129,7 +125,7 @@ switch ($action) {
                                     .$strPrenom.' a été ajouté</span>';
                                 // récupération du numéro (auto-incrément)
                                 $strSQL = "SELECT MAX(id_auteur) FROM auteur";
-                                $intID = $cnx->getValue( $strSQL, array());
+                                $intID = getValue($cnx, $strSQL, array());
                                 include 'vues/v_consulterAuteur.php';
                             }
                             else {
@@ -156,14 +152,14 @@ switch ($action) {
                         }
                     }
             } break;
-        }
-    } break;
+        }        
+    } break;    
     case 'modifierAuteur' : {
         // initialisation des variables
         $strNom = '';
         $strPrenom = '';
         $strAlias = '';
-        $strNotes = '';
+        $strNotes = '';        
         // traitement de l'option : saisie ou validation ?
         if (isset($_GET["option"])) {
             $option = htmlentities($_GET["option"]);
@@ -175,12 +171,17 @@ switch ($action) {
             case 'saisirAuteur' : {
                 // récupération du code
                 if (isset($_GET["id"])) {
-                    
+                    $intID = intval(htmlentities($_GET["id"]));
+                    // récupération des données dans la base
+                    $strSQL = "SELECT nom_auteur, prenom_auteur, alias, notes "
+                        ."FROM auteur "
+                        ."WHERE id_auteur = ?";
+                    $lAuteur = getRows($cnx, $strSQL, array($intID));
                     if (count($lAuteur) == 1) {
-                        $strNom = $lAuteur->getNom();
-                        $strPrenom = $lAuteur->getPrenom();
-                        $strAlias = $lAuteur->getAlias();
-                        $strNotes = $lAuteur->getNotes();
+                        $strNom = $lAuteur[0][0];
+                        $strPrenom = $lAuteur[0][1];
+                        $strAlias = $lAuteur[0][2];
+                        $strNotes = $lAuteur[0][3];
                     }
                     else {
                         $tabErreurs["Erreur"] = "Cet auteur n'existe pas !";
@@ -221,15 +222,20 @@ switch ($action) {
                     }
                     if (!$hasErrors) {
                         // mise à jour dans la base de données
+                        $strSQL = "UPDATE auteur SET nom_auteur = ?,"
+                                ."prenom_auteur = ?,"
+                                ."alias = ?,"
+                                ."notes = ? "
+                                ."WHERE id_auteur = ?";
                         try {
-                            $res = Auteurs::modifierAuteur(
-                                    new Auteur(
-                                    $intID,
+                            $res = execSQL($cnx,$strSQL,array(
                                     $strNom,
                                     $strPrenom,
                                     $strAlias,
-                                    $strNotes
-                                    ));
+                                    $strNotes,
+                                    $intID
+                                )
+                            );
                             if ($res) {                                    
                                 $msg = '<span class="info">L\'auteur '
                                     .$strNom.' '
@@ -244,7 +250,7 @@ switch ($action) {
                                 $tabErreurs["Alias"] = $strAlias;
                                 $tabErreurs["Notes"] = $strNotes;
                                 // en phase de test, on peut ajouter le SQL :
-                                $tabErreurs["SQL"] = $res;
+                                $tabErreurs["SQL"] = $strSQL;
                                 $hasErrors = true;
                             }
                         }
@@ -271,11 +277,16 @@ switch ($action) {
     case 'supprimerAuteur' : {
         // récupération de l'identifiant du auteur passé dans l'URL
         if (isset($_GET["id"])) {
-                       
+            $intID = intval(htmlentities($_GET["id"]));
+            // récupération des données  dans la base
+            $strSQL = "SELECT nom_auteur, prenom_auteur, alias "
+                ."FROM auteur "
+                ."WHERE id_auteur = ?";
+            $lAuteur = getRows($cnx, $strSQL, array($intID));            
             if (count($lAuteur) == 1) {
-                $strNom = $lAuteur->getNom();
-                $strPrenom = $lAuteur->getPrenom();
-                $strAlias = $lAuteur->getAlias();
+                $strNom = $lAuteur[0][0];
+                $strPrenom = $lAuteur[0][1];
+                $strAlias = $lAuteur[0][2];
             }
             else {
                 $tabErreurs["Erreur"] = "Cet auteur n'existe pas !";
@@ -284,21 +295,21 @@ switch ($action) {
             }
             if (!$hasErrors) {
                 // rechercher des ouvrages de ce auteur
+                $strSQL = "SELECT COUNT(*)  "
+                    ."FROM auteur_ouvrage "
+                    ."WHERE id_auteur = ?";
                 try {
-                    $ouvragesAuteur = Auteurs::nbOuvragesParAuteurs($intID);
+                    $ouvragesAuteur = getValue($cnx, $strSQL, array($intID));
                     if ($ouvragesAuteur == 0) {
                         // c'est bon, on peut le supprimer
+                        $strSQL = "DELETE FROM auteur WHERE id_auteur = ?";
                         try {
-                            $res = Auteurs::supprimerAuteur($intID);
+                            $res = execSQL($cnx, $strSQL, array($intID));
                             if ($res) {
-                                $msg = 'L\'auteur '
+                                $msg = '<span class="info">L\'auteur '
                                     .$strNom.' a été supprimé';
-                                Application::addNotification(new Notification($msg, SUCCESS));
-                                $lesAuteurs = Auteurs::chargerLesAuteurs(1);
-                                $nbAuteurs = count($lesAuteurs);
-                                include 'vues/v_listeAuteurs.php';
-                                }                                                    
-                            }
+                                include 'vues/v_afficherMessage.php';
+                        }                                                    }
                         catch (PDOException $e) {
                             $tabErreurs["Erreur"] = 
                                     "Une exception PDO a été levée !";
@@ -330,12 +341,15 @@ switch ($action) {
     } break;   
     case 'listerAuteurs' : {
         // récupérer les auteurs
-        $lesAuteurs = Auteurs::chargerLesAuteurs(1);
+        $strSQL = "SELECT id_auteur as ID, "
+            ." nom AS Nom "
+            ."FROM v_auteurs ";
+        $lesAuteurs = getRows($cnx, $strSQL, array());
         // afficher le nombre de auteurs
         $nbAuteurs = count($lesAuteurs);
         include 'vues/v_listeAuteurs.php';
     } break;
-    
+    // déconnexion
+    disconnectDB($cnx);
 }
 
-// TODO déconnexion //

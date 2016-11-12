@@ -30,7 +30,6 @@ class AdminRender {
     const ICON_INFO = 'fa fa-info-circle';
     const ICON_QUESTION = 'fa fa-question-circle';
     const ICON_ERROR = 'fa fa-exclamation-triangle';    
-
     
     /*
      * composant d'affichage d'un message d'erreur
@@ -131,45 +130,4 @@ class AdminRender {
         return $img;
     }    
     
-    /**
-     * affichAuteurs Affiche un ou des auteurs au format : "Nom Prénom"
-     * @param tb $tbAuteur un tableau d'objet de la classe Auteur
-     * @param int $nivDetail le niveau de détail de l'auteur (0 => peu détaillé, 1 => détaillé)
-     * @return string une chaine contenante le nom suivit du prénom, et ce pour chaque auteurs
-     */
-    public static function affichAuteurs($tbAuteur,$nivDetail)
-    {
-        $strLesAuteurs = "";
-        $i = 0;
-        foreach($tbAuteur as $unAut)
-        {         
-            
-            if($nivDetail==0)
-            {
-                // On va définir la longueur que doit faire notre chaîne
-                $longCoupure = (strlen($unAut->decrireAuteur())-strlen($unAut->getPrenom()))+1;
-            }
-            else{
-                $longCoupure = strlen($unAut->decrireAuteur());
-            }
-            
-            // on coupe la chaine selon la longueur donné par la variable ci-dessus
-            $chaine = substr($unAut->decrireAuteur(),0,$longCoupure);
-            
-            switch($i)
-            {
-                case 0:
-                    $strLesAuteurs .= $chaine;
-                    break;
-                case count($tbAuteur):
-                    $strLesAuteurs .= $chaine.".";
-                    break;
-                default : 
-                    $strLesAuteurs .= ", ".$chaine;
-                    break;
-            }
-            $i++;
-        }
-        return $strLesAuteurs;
-    }
 }

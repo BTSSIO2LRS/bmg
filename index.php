@@ -16,8 +16,7 @@ $_SESSION['prenom'] = 'Jean';
 
 // inclure les bibliothèques de fonctions
 require_once 'include/_config.inc.php';
-require_once 'include/_metier.lib.php';
-require_once 'modele/Dal/PdoDao.class.php';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +25,6 @@ require_once 'modele/Dal/PdoDao.class.php';
         <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="css/screen.css" />
         <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-        
     </head>
     <body>
         <?php
@@ -56,8 +54,6 @@ require_once 'modele/Dal/PdoDao.class.php';
                 include 'controleurs/c_gererAuteurs.php'; break;
             case 'gererOuvrages' : 
                 include 'controleurs/c_gererOuvrages.php'; break;
-            case 'gererPrets' : 
-                include 'controleurs/c_gererPrets.php'; break;
             default : include 'vues/v_home.php'; break;
         }
         include("vues/_v_footer.php");

@@ -380,32 +380,5 @@ class Utilities {
         closedir($dir_handle);
         return $nb;
     } 
-    
-    
-    /**
-     * Retourne la premiére clé/valeur d'un tableau (notament utile pour les tableaux associatifs)
-     * @param array $tab un tableau
-     * @param int $mode 0 => renvoie la premiére valeur du tableau, 1=> renvoie la premiére clé du tableau
-     * @return mixed la premiére occurence d'un tableau ou nul si le tableau est vide
-     */
-    public static function firstOccur($tab,$mode = 0)
-    {
-        foreach($tab as $key=>$values)
-        {
-            if(is_array($values))
-            {
-                self::firstOccur($values,$mode);
-            }
-            if($mode == 0)
-            {
-                return $values;
-            }
-            elseif($mode == 1)
-            {
-                return $key;            
-            }
-        }
-        return null;
-    }
 
 }

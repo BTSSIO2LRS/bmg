@@ -8,7 +8,6 @@
 ?>
 <div id="content">
     <h2>Gestion des auteurs</h2>
-    <?php AdminRender::showNotifications();?>
     <a href="index.php?uc=gererAuteurs&action=ajouterAuteur" title="Ajouter">
         Ajouter un auteur
     </a>
@@ -25,7 +24,7 @@
                     // création du tableau
                     echo '<table>';
                     // affichage de l'entete du tableau 
-                    echo '<tr><th>ID</th><th>Nom</th><th>Prenom</th><th>Alias</th><th>Notes</th></tr>';
+                    echo '<tr><th>ID</th><th>Nom</th></tr>';
                     // affichage des lignes du tableau
                     $n = 0;
                     foreach($lesAuteurs as $ligne) {
@@ -37,12 +36,9 @@
                         }
                         // afficher la colonne 1 dans un hyperlien
                         echo '<td><a href="index.php?uc=gererAuteurs&action=consulterAuteur&id='
-                            .$ligne->getId().'">'.$ligne->getId().'</a></td>';
+                            .$ligne[0].'">'.$ligne[0].'</a></td>';
                         // afficher les colonnes suivantes
-                        echo '<td>'.$ligne->getNom().'</td>';
-                        echo '<td>'.$ligne->getPrenom().'</td>';
-                        echo '<td>'.$ligne->getAlias().'</td>';
-                        echo '<td>'.$ligne->getNotes().'</td>';
+                        echo '<td>'.$ligne[1].'</td>';
                         echo '</tr>';
                         $n++;
                     }

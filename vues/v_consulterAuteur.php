@@ -8,8 +8,11 @@
 ?>
 <div id="content">
     <h2>Gestion des auteurs</h2>
-    <?php AdminRender::showNotifications();?>
-
+    <?php 
+    if (strlen($msg) > 0) {
+        echo '<span class="info">'.$msg.'</span>';
+    }
+    ?>
     <div id="object-list">
         <div class="corps-form">
             <fieldset>

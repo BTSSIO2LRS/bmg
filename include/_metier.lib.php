@@ -4,7 +4,9 @@
  * PHP - Bibliothèques de fonctions
  * Fonctions métier
  */
-include('./modele/App/Utilities.class.php');
+
+// la bibliothèque d'accès aux données
+require_once '_data.lib.php';
 
 /**
  * vérifie la validité du code d'un rayon (1 lettre en majuscules et un chiffre)
@@ -43,31 +45,4 @@ function couvertureOuvrage($id, $alt) {
     }
     $img .= ' />';
     return $img;
-}
-
-/**
- * Affiche une liste à partir d'un tableau unidimensionel
- * @param type $tab
- * @param type $name
- * @param type $select
- * @param type $class
- */
-function afficherListe($tab,$name,$select,$class)
-{
-    if(empty($select))
-    {
-        $select = Utilities::firstOccur($tab,1);
-    }
-    echo '<select name="'.$name.'" class="'.$class.'" >';
-        foreach($tab as $key=>$values) 
-        {
-            if($key == $select)
-            {
-                echo '<option selected value="'.$key.'">'.$values.'</option>';   
-            }
-            else{
-                echo '<option value="'.$key.'">'.$values.'</option>';   
-            }
-        }
-    echo('</select>');
 }

@@ -39,9 +39,3 @@ define ('SUCCESS', 2);
 define ('PATH_TO_IMG', 'img/couvertures/');  // chemin d'accès aux images de couverture des ouvrages
 define ('DEFAULT_IMG', '0.jpg');             // couverture par défaut
 define ('NOT_FOUND_IMAGE', 'img/0.jpg');     // chemin d'accès vers l'image par défaut
-
-define("PRETS_EN_COURS",1);
-define("PRETS_RENDUS",2);
-define("PRETS_RENDUS_EN_RETARD",3);
-define("PRETS_RENDUS_A_TEMPS",4);
-define("PRETS_EN_RETARD",5);

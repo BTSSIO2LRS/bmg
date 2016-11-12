@@ -5,14 +5,11 @@
  * @author 
  * @package default
 */
-$_SESSION["no_ouvrage"] = $no;
 ?>
 <div id="content">
-    <h2>Gestion des ouvrages</h2>
-    <?php AdminRender::showNotifications();?>
+    <h2>Gestion des auteurs</h2>
     <div id="object-list">
-        
-        <form action="index.php?uc=gererOuvrages&action=modifierOuvrage&option=validerOuvrage&id=<?php echo $no ?>" method="post">
+        <form action="index.php?uc=gererOuvrages&action=modifierOuvrage&option=validerOuvrage&id=<?php echo $intID ?>" method="post">
             <div class="corps-form">
                 <fieldset>
                     <legend>Modifier un ouvrage</legend>
@@ -29,7 +26,7 @@ $_SESSION["no_ouvrage"] = $no;
                                     name="txtID"
                                     size="5"
                                     readonly="readonly"
-                                    value="<?php echo $no ?>"
+                                    value="<?php echo $intID ?>"
                                 />
                             </td>
                         </tr>                                        
@@ -98,7 +95,9 @@ $_SESSION["no_ouvrage"] = $no;
                             </td>
                             <td>
                                 <?php 
-                                    afficherListe($lesGenres,"cbxGenres",$strCodeGenre,"");
+                                    $strSQL = "SELECT code_genre, lib_genre FROM genre";
+                                    $lesGenres = getRows($cnx, $strSQL, array());
+                                    afficherListe($lesGenres,"cbxGenres",$strGenre,"");
                                 ?>
                             </td>
                         </tr>
@@ -123,7 +122,6 @@ $_SESSION["no_ouvrage"] = $no;
                                 />
                             </td>
                         </tr>
-                        
                     </table>
                 </fieldset>
             </div>
