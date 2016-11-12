@@ -15,8 +15,6 @@
  * @author 	dk
  * @version    	1.0
  */
-
-
 /*
  *  ====================================================================
  *  Classe Ouvrages : fabrique d'objets Ouvrage
@@ -31,16 +29,15 @@ require_once ('./modele/App/Application.class.php');
 require_once ('./modele/Reference/Ouvrage.class.php');
 
 class Ouvrages {
-
     /**
      * Méthodes publiques
      */
-    
+
     /**
      * récupère les ouvrages
      * @param   $mode : 0 == tableau assoc, 1 == tableau d'objets
      * @return  un tableau de type $mode 
-     */    
+     */
     public static function chargerLesOuvrages($mode) {
         $tab = OuvrageDal::loadOuvrages(1);
         if (Application::dataOK($tab)) {
@@ -48,18 +45,12 @@ class Ouvrages {
                 $res = array();
                 foreach ($tab as $ligne) {
                     $unOuvrage = new Ouvrage(
-                            $ligne->no_ouvrage, 
-                            $ligne->titre,
-                            $ligne->salle,
-                            $ligne->rayon,
-                            new Genre($ligne->code_genre,$ligne->lib_genre),
-                            $ligne->acquisition
+                            $ligne->no_ouvrage, $ligne->titre, $ligne->salle, $ligne->rayon, new Genre($ligne->code_genre, $ligne->lib_genre), $ligne->acquisition
                     );
                     array_push($res, $unOuvrage);
                 }
                 return $res;
-            }
-            else {
+            } else {
                 return $tab;
             }
         }
@@ -70,7 +61,7 @@ class Ouvrages {
      * vérifie si un ouvrage existe
      * @param   $id : l'id de l'ouvrage à contrôler
      * @return  un booléen
-     */    
+     */
     public static function ouvrageExists($id) {
         $values = ouvrageDal::loadOuvrageByID($id, 1);
         if (Application::dataOK($values)) {
@@ -78,52 +69,45 @@ class Ouvrages {
         }
         return 0;
     }
-        
-    
+
     public static function ajouterOuvrage($valeurs) {
         $id = OuvrageDal::addOuvrage(
-                $valeurs[0],
-                $valeurs[1],
-                $valeurs[2],
-                $valeurs[3],
-                $valeurs[4],
-                $valeurs[5]
-            );
+                        $valeurs[0], $valeurs[1], $valeurs[2], $valeurs[3], $valeurs[4], $valeurs[5]
+        );
         $unOuvrage = self::chargerOuvrageParID($id);
         return $unOuvrage;
     }
 
     public static function modifierOuvrage($unOuvrage) {
         return OuvrageDal::setOuvrage(
-            $unOuvrage->getNo(),
-            $unOuvrage->getTitre(),
-            $unOuvrage->getSalle(),
-            $unOuvrage->getRayon(),
-            $unOuvrage->getGenre()->getCode(),
-            $unOuvrage->getDateAcqui()
+                        $unOuvrage->getNo(), $unOuvrage->getTitre(), $unOuvrage->getSalle(), $unOuvrage->getRayon(), $unOuvrage->getGenre()->getCode(), $unOuvrage->getDateAcqui()
         );
-    }    
-    
-    public static function supprimerOuvrage($code) {
-        return OuvrageDal::delOuvrage($code);
-    }    
-    
+    }
+
+    /**
+     * supprimerOuvrage supprime les références à l'ouvrage partout dans la base de donnée
+     * /!\ La suppression est irreversible /!\
+     * @param type $no_ouvrage un numéro d'ouvrage à supprimer
+     * @return boolean
+     */
+    public static function supprimerOuvrage($no_ouvrage) {
+        return OuvrageDal::delOuvrage($no_ouvrage);
+    }
+
     /**
      * récupère les caractéristiques d'un genre
      * @param   $no : le numéro de l'ouvrage
      * @return  un objet de la classe Ouvrage
      */
     public static function chargerOuvrageParId($no) {
-        $lOuvrage = OuvrageDal::loadOuvrageByID($no);
-        $unOuvrage = new Ouvrage($lOuvrage[0]->no_ouvrage,
-                                 $lOuvrage[0]->titre,
-                                 $lOuvrage[0]->salle,
-                                 $lOuvrage[0]->rayon,
-                                 (new Genre($lOuvrage[0]->code_genre,$lOuvrage[0]->lib_genre)),
-                                 $lOuvrage[0]->acquisition);
-        return $unOuvrage;            
+        $unOuvrage = null;
+        if (Ouvrages::ouvrageExists($no)) {
+            $lOuvrage = OuvrageDal::loadOuvrageByID($no);
+            $unOuvrage = new Ouvrage($lOuvrage[0]->no_ouvrage, $lOuvrage[0]->titre, $lOuvrage[0]->salle, $lOuvrage[0]->rayon, (new Genre($lOuvrage[0]->code_genre, $lOuvrage[0]->lib_genre)), $lOuvrage[0]->acquisition);
+        }
+        return $unOuvrage;
     }
-    
+
     /**
      * récupère le nombre d'ouvrages pour un genre
      * @param   $code : le code du genre
@@ -132,5 +116,34 @@ class Ouvrages {
     public static function nbOuvragesParGenre($code) {
         return GenreDal::countOuvragesGenre($code);
     }
-        
+
+    /**
+     * supprime l'auteur d'un ouvrage
+     * @param $no_ouvrage : l'id de l'ouvrage
+     * @param $id_aut ! l'id de l'auteur
+     * @return : 
+     */
+    public static function supprimerAuteurOuvrage($no_ouvrage, $id_aut) {
+        return OuvrageDal::delAuteurOuvrage($no_ouvrage, $id_aut);
+    }
+
+    /**
+     * ajouterAuteurOuvrage ajoute un auteur à l'ouvrage donné en paramétre
+     * @param type $no_ouvrage l'id de l'ouvrage auquel on ajoute un auteur
+     */
+    public static function ajouterAuteurOuvrage($no_ouvrage, $id_auteur) {
+        return OuvrageDal::addAuteurOuvrage($no_ouvrage, $id_auteur);
+    }
+
+    /**
+     * ouvragePrete indique si l'ouvrage est prêté
+     * @param int $no_ouvrage
+     * @return bool retourne
+     *           vrai si l'ouvrage est disponible, 
+     *           faux si l'ouvrage est prêté
+     */
+    public static function ouvragePrete($no_ouvrage) {
+        return OuvrageDal::isLendOuvrage($no_ouvrage);
+    }
+
 }

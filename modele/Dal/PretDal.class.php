@@ -1,5 +1,6 @@
 <?php
-/** 
+
+/**
  * BMG
  * © GroSoft, 2015
  * 
@@ -12,19 +13,33 @@
  * @author 	Andriolo & Collin , 28/09/2016
  * @version    	1.0
  */
-
 // sollicite les services de la classe PdoDao
 require_once ('PdoDao.class.php');
 
 class PretDal {
-    
+
     /**
+     * 
+     * @param type $style 0 => tableau assoc, 1=> objet
+     * @return type un objet de la classe PDOStatement
+     */
+    public static function loadPret($style) {
+        $cnx = new PdoDao();
+        $qry = 'SELECT * FROM pret';
+        $res = $cnx->getRows($qry, array(), $style);
+        if (is_a($res, 'PDOException')) {
+            return PDO_EXCEPTION_VALUE;
+        }
+        return $res;
+    }
+
+        /**
      * loadGenericPret est une fonction générique permettant de charger de prêts
      * @param int $mode 0 => charge tous les prêts de tous les clients avec etat optionel, 1 => charge un 
      * prêts par id, 2 => charge tous les prêts d'un clients par etat
      * @param array $arrayParams si mode 0 donné un état de prêts (voir config.inc.php), si mode 1 mettre
      * un id de pret dans le tableau, si mode 2 mettre un numéro de client et un état de prêts (voir config.inc.php)
-     * @return le résultat d'une requête 
+     * @return mixed 
      */
     public static function loadGenericPret($mode,$arrayParams) {
         
@@ -72,4 +87,5 @@ class PretDal {
         }
         return $res;
     }
+
 }

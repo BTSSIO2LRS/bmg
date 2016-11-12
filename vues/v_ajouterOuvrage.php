@@ -1,13 +1,13 @@
 <?php
-/** 
+/**
  * Page de gestion des ouvrages
  * @author pv
  * @package default
-*/
+ */
 ?>
+<?php AdminRender::showNotifications(); ?>
 <div id="content">
-    <h2>Gestion des ouvrages</h2>
-    <?php AdminRender::showNotifications(); ?>
+    <h2>Gestion des Ouvrages</h2>
     <div id="object-list">
         <form action="index.php?uc=gererOuvrages&action=ajouterOuvrage&option=validerOuvrage" method="post">
             <div class="corps-form">
@@ -26,11 +26,11 @@
                                     name="txtTitre"
                                     size="50" maxlength="128"
                                     <?php
-                                        if (!empty($strTitre)) {
-                                            echo ' value="'.$strTitre.'"';
-                                        }
+                                    if (!empty($strTitre)) {
+                                        echo ' value="' . $strTitre . '"';
+                                    }
                                     ?>
-                                />
+                                    />
                             </td>
                         </tr>
                         <tr>
@@ -39,20 +39,20 @@
                             </td>
                             <td>
                                 <input type="radio" id="rbnSalle" name="rbnSalle" value="1" 
-                                    <?php
-                                        if ($intSalle == 1) {
-                                            echo 'checked="checked"';
-                                        }
-                                    ?>
-                                />
+                                <?php
+                                if ($intSalle == 1) {
+                                    echo 'checked="checked"';
+                                }
+                                ?>
+                                       />
                                 <label>1</label>
                                 <input type="radio" id="rbnSalle" name="rbnSalle" value="2" 
-                                    <?php
-                                        if ($intSalle == 2) {
-                                            echo 'checked="checked"';
-                                        }
-                                    ?>
-                                />
+                                <?php
+                                if ($intSalle == 2) {
+                                    echo 'checked="checked"';
+                                }
+                                ?>
+                                       />
                                 <label>2</label>
                             </td>
                         </tr>
@@ -68,11 +68,11 @@
                                     name="txtRayon"
                                     size="2" maxlength="2"
                                     <?php
-                                        if (!empty($strRayon)) {
-                                            echo ' value="'.$strRayon.'"';
-                                        }
+                                    if (!empty($strRayon)) {
+                                        echo ' value="' . $strRayon . '"';
+                                    }
                                     ?>
-                                />
+                                    />
                             </td>
                         </tr>  
                         <tr>
@@ -83,7 +83,7 @@
                             </td>
                             <td>
                                 <?php
-                                    afficherListe($lesAuteurs,"cbxAuteurs",$strAuteur,"");
+                                afficherListe($lesAuteurs, "cbxAuteurs", $strAuteur, "");
                                 ?>
                             </td>
                         </tr>
@@ -94,8 +94,8 @@
                                 </label>
                             </td>
                             <td>
-                                <?php 
-                                    afficherListe($lesGenres,"cbxGenres",$strGenre,"");
+                                <?php
+                                afficherListe($lesGenres, "cbxGenres", $strGenre, "");
                                 ?>
                             </td>
                         </tr>
@@ -110,14 +110,13 @@
                                     type="date" id="txtDate" 
                                     name="txtDate" 
                                     <?php
-                                        if (!empty($strDate)) {
-                                            echo ' value="'.$strDate.'"';
-                                        }
-                                        else {
-                                            echo ' value="'.date('Y-m-d').'"';
-                                        }
+                                    if (!empty($strDate)) {
+                                        echo ' value="' . $strDate . '"';
+                                    } else {
+                                        echo ' value="' . date('Y-m-d') . '"';
+                                    }
                                     ?>
-                                />
+                                    />
                             </td>
                         </tr>
                     </table>
@@ -128,9 +127,9 @@
                     <input id="cmdValider" name="cmdValider" 
                            type="submit"
                            value="Ajouter"
-                    />
+                           />
                 </p> 
             </div>
         </form>
     </div>
-</div>          
+</div>

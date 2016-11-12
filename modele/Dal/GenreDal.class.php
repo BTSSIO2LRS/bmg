@@ -19,7 +19,6 @@ require_once ('PdoDao.class.php');
 class GenreDal { 
        
     /**
-     * charge un tableau de genres
      * @param  $style : 0 == tableau assoc, 1 == objet
      * @return  un objet de la classe PDOStatement
     */   
@@ -54,7 +53,10 @@ class GenreDal {
      * @param   string  $libelle : le libellé du genre à ajouter
      * @return  object un objet de la classe Genre
     */      
-    public static function addGenre($code, $libelle) {
+    public static function addGenre(
+            $code,
+            $libelle
+    ) {
         $cnx = new PdoDao();
         $qry = 'INSERT INTO genre VALUES (?,?)';
         $res = $cnx->execSQL($qry,array(
@@ -74,7 +76,10 @@ class GenreDal {
      * @param   string  $libelle
      * @return  un code erreur
     */      
-    public static function setGenre($code, $libelle) {
+    public static function setGenre(
+            $code,
+            $libelle
+    ) {
         $cnx = new PdoDao();
         $qry = 'UPDATE genre SET lib_genre = ? WHERE code_genre = ?';
         $res = $cnx->execSQL($qry,array(

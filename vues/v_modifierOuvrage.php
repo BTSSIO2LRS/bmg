@@ -11,6 +11,7 @@ $_SESSION["no_ouvrage"] = $no;
     <h2>Gestion des ouvrages</h2>
     <?php AdminRender::showNotifications();?>
     <div id="object-list">
+        
         <form action="index.php?uc=gererOuvrages&action=modifierOuvrage&option=validerOuvrage&id=<?php echo $no ?>" method="post">
             <div class="corps-form">
                 <fieldset>
@@ -122,6 +123,7 @@ $_SESSION["no_ouvrage"] = $no;
                                 />
                             </td>
                         </tr>
+                        
                     </table>
                 </fieldset>
             </div>

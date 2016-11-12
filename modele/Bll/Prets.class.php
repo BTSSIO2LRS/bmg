@@ -36,7 +36,7 @@ class Prets {
      * Méthodes publiques
      */
     
-    /**
+       /**
      * r�cup�re les prets
      * @param   $mode : 0 == tableau assoc, 1 == tableau d'objets
      * @return  un tableau de type $mode 
@@ -65,6 +65,7 @@ class Prets {
         }
         return NULL;
     }
+
 
     /**
      * v�rifie si un pret existe

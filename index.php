@@ -26,7 +26,6 @@ require_once 'modele/Dal/PdoDao.class.php';
         <meta charset="UTF-8" />
         <link rel="stylesheet" type="text/css" href="css/screen.css" />
         <link rel="stylesheet" type="text/css" href="css/font-awesome.css" />
-        
     </head>
     <body>
         <?php

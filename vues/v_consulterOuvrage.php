@@ -15,7 +15,8 @@
                 <div id="breadcrumb">
                     <a href="index.php?uc=gererOuvrages&action=ajouterOuvrage">Ajouter</a>&nbsp;
                     <a href="index.php?uc=gererOuvrages&action=modifierOuvrage&option=saisirOuvrage&id=<?php echo $no ?>">Modifier</a>&nbsp;
-                    <a href="index.php?uc=gererOuvrages&action=supprimerOuvrage&id=<?php echo $no ?>">Supprimer</a>
+                    <a href="index.php?uc=gererOuvrages&action=supprimerOuvrage&id=<?php echo $no ?>">Supprimer</a>&nbsp;
+                    <a href="index.php?uc=gererOuvrages&action=auteursOuvrage&id=<?php echo $no ?>">Auteurs</a>
                 </div>
                 <table>
                     <tr>

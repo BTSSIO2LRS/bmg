@@ -45,3 +45,5 @@ define("PRETS_RENDUS",2);
 define("PRETS_RENDUS_EN_RETARD",3);
 define("PRETS_RENDUS_A_TEMPS",4);
 define("PRETS_EN_RETARD",5);
+
+define("AUTEUR_INCONU","indéterminé"); // Un auteur inconnu

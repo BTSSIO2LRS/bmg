@@ -5,9 +5,6 @@
  * @package default
 */
 ?>
-
-<?php require_once './render/AdminRender.class.php' ?>
-
 <div id="content">
     <h2>Gestion des genres</h2>    
     <?php AdminRender::showNotifications(); ?>

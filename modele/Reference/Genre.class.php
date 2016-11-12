@@ -13,6 +13,7 @@
  * @version    	1.0
  */
 
+
 /*
  *  ====================================================================
  *  Classe Genre : représente un genre d'ouvrage 
@@ -37,6 +38,7 @@ class Genre {
     /**
      * Accesseurs
     */
+
     public function getCode () {
         return $this->_code;
     }
@@ -47,7 +49,8 @@ class Genre {
     
     /**
      * Mutateurs
-    */   
+    */
+    
     public function setCode ($p_code) {
         $this->_code = $p_code;
     }
