@@ -40,6 +40,7 @@ define ('PATH_TO_IMG', 'img/couvertures/');  // chemin d'accès aux images de co
 define ('DEFAULT_IMG', '0.jpg');             // couverture par défaut
 define ('NOT_FOUND_IMAGE', 'img/0.jpg');     // chemin d'accès vers l'image par défaut
 
+// constantes pour la fonction loadGenericPret (PretDal.class.php)
 define("PRETS_EN_COURS",1);
 define("PRETS_RENDUS",2);
 define("PRETS_RENDUS_EN_RETARD",3);
@@ -47,3 +48,5 @@ define("PRETS_RENDUS_A_TEMPS",4);
 define("PRETS_EN_RETARD",5);
 
 define("AUTEUR_INCONU","indéterminé"); // Un auteur inconnu
+
+define("ADMIN_SITE_EMAIL","admin@gmail.com");
