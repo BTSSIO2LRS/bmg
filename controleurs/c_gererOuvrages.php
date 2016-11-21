@@ -35,14 +35,14 @@ switch ($action) {
             include 'vues/v_listeOuvrages.php';
         } break;
     case 'consulterOuvrage' : {
-            if (!isset($unOuvrage)) {
-                Application::addNotification(new Notification("L'ouvrage que vous souhaitez consultez n'existe pas !", ERROR));
+            if (isset($unOuvrage) and ! empty($unOuvrage)) {
+                initDisplayOuvrage($unOuvrage, "vues/v_consulterOuvrage.php",1);
+            } else {
+                Application::addNotification(new Notification("Aucun ouvrage n'à été transmis pour consultation", ERROR));
                 $lesOuvrages = Ouvrages::chargerLesOuvrages(0);
                 // afficher le nombre de ouvrages
                 $nbOuvrages = count($lesOuvrages);
                 include 'vues/v_listeOuvrages.php';
-            } else {
-                initDisplayOuvrage($unOuvrage, "vues/v_consulterOuvrage.php");
             }
         } break;
     case 'ajouterOuvrage' : {
@@ -71,7 +71,7 @@ switch ($action) {
 
             // traitement de l'option : saisie ou validation ?
             if (isset($_GET["option"])) {
-                $option = htmlentities($_GET["option"]);
+                $option = htmlspecialchars($_GET["option"]);
             } else {
                 $option = 'saisirOuvrage';
             }
@@ -88,7 +88,6 @@ switch ($action) {
                                 // ajout dans la base de données
                                 $unOuvrage = Ouvrages::ajouterOuvrage(array($data["titre"], $data["salle"], $data["rayon"], $data["auteur"], $data["genre"], $data["date"]));
                                 Application::addNotification(new Notification("L'ouvrage à été ajouté !", SUCCESS));
-                                var_dump($unOuvrage);
                                 initDisplayOuvrage($unOuvrage, 'vues/v_consulterOuvrage.php');
                             } else {
                                 include 'vues/v_ajouterOuvrage.php';
@@ -102,14 +101,14 @@ switch ($action) {
             $hasErrors = false;
             // traitement de l'option : saisie ou validation ?
             if (isset($_GET["option"])) {
-                $option = htmlentities($_GET["option"]);
+                $option = htmlspecialchar($_GET["option"]);
             } else {
                 $option = 'saisirOuvrage';
             }
             switch ($option) {
                 case 'saisirOuvrage' : {
                         // récupération des données après vérification de la présence de l'objet ouvrage
-                        if (isset($unOuvrage)) {
+                        if (isset($unOuvrage) and ! empty($unOuvrage)) {
                             initDisplayOuvrage($unOuvrage, "vues/v_modifierOuvrage.php");
                         } else {
                             Application::addNotification(new Notification("L'ouvrage est inconnu !", ERROR));
@@ -155,7 +154,7 @@ switch ($action) {
             if (isset($unOuvrage) and ! empty($unOuvrage)) {
                 if (Ouvrages::ouvrageExists($unOuvrage->getNo())) {
                     // On vérifie que l'ouvrage n'est pas prêté
-                    if (Ouvrages::ouvragePrete($unOuvrage->getNo())) {
+                    if (!Ouvrages::ouvragePrete($unOuvrage->getNo())) {
                         // On supprime l'ouvrage
                         if (Ouvrages::supprimerOuvrage($unOuvrage->getNo()) != PDO_EXCEPTION_VALUE) {
                             Application::addNotification(new Notification("L'ouvrage a été supprimé !", SUCCESS));
@@ -170,7 +169,7 @@ switch ($action) {
                         }
                     } else {
                         // l'ouvrage est actuelement en prêts 
-                        Application::addNotification(new Notification("L'ouvrage " . $unOuvrage->getTitre() . Ouvrages::ouvragePrete($unOuvrage->getNo()) . " est actuelement concerné par un prêt, la supression sera possible lorsque celui ci aurat été rendu", WARNING));
+                        Application::addNotification(new Notification("L'ouvrage ayant été prêté ne peux pas être supprimé ", WARNING));
                         initDisplayOuvrage($unOuvrage, 'vues/v_consulterOuvrage.php');
                     }
                 } else {
@@ -195,7 +194,7 @@ switch ($action) {
     case'ajouterAuteur': {
             // traitement de l'option : saisie ou validation ?
             if (isset($_GET["option"])) {
-                $option = htmlentities($_GET["option"]);
+                $option = htmlspecialchar($_GET["option"]);
             } else {
                 $option = 'saisirAuteur';
             }
@@ -221,7 +220,7 @@ switch ($action) {
                                         $lesAuteursOuvrage = $unOuvrage->getAuteurs();
                                         $nbAuteurs = count($lesAuteursOuvrage);
                                         include 'vues/v_auteursOuvrage.php';
-                                        
+
                                         $lesAuteurs = loadAuteurException($unOuvrage->getAuteurs());
                                         include 'vues/v_ajouterAuteursOuvrage.php';
                                     } else {
@@ -277,8 +276,10 @@ switch ($action) {
  * les affiche dans la vue dont le chemin est donnée en paramétre
  * @param Ouvrage $unOuvrage un objet de la classe ouvrage
  * @param string $include un chemin pointant vers une vue à laquelle on transmet les données pour l'affichage
+ * @param int $multipleLigne indique si l'on doit passer une ligne à chaque auteur (0 => tous les auteurs sur une ligne,
+ * 1=> 1 auteur par ligne.)
  */
-function initDisplayOuvrage($unOuvrage, $include) {
+function initDisplayOuvrage($unOuvrage, $include, $multipleLigne=0) {
     //initialisation des données
     $no = $unOuvrage->getNo();
     $strTitre = $unOuvrage->getTitre();
@@ -289,7 +290,7 @@ function initDisplayOuvrage($unOuvrage, $include) {
     $strLibGenre = $unOuvrage->getGenre()->getLibelle();
     $strDernierPret = $unOuvrage->getDernierPret();
     $strDispo = $unOuvrage->getDispo();
-    $strAuteur = $unOuvrage->affichAuteursThisOuvrage(1);
+    $strAuteur = $unOuvrage->affichAuteursThisOuvrage(1,$multipleLigne);
     //Création d'un tableau de genre afin de formater celui-ci en vue de l'utiliser en paramét
     $rq = Genres::chargerLesGenres(0);
     $lesGenres = array();
