@@ -21,11 +21,17 @@ class OuvrageDal {
     /**
      * loadOuvrages charge les ouvrages de la base de données
      * @param  $style : 0 == tableau assoc, 1 == objet
+     * @param bool $dispo :
+     *                          false => charge tous les ouvrages
+     *                          true => charge uniquement les ouvrages disponibles (non prêté)
      * @return  un objet de la classe PDOStatement
      */
-    public static function loadOuvrages($style) {
+    public static function loadOuvrages($style, $dispo) {
         $cnx = new PdoDao();
         $qry = 'SELECT * FROM v_ouvrages';
+        if ($dispo) {
+            $qry .= " WHERE no_ouvrage NOT IN(SELECT no_ouvrage FROM v_prets_en_cours)";
+        }
         $res = $cnx->getRows($qry, array(), $style);
         if (is_a($res, 'PDOException')) {
             return PDO_EXCEPTION_VALUE;
@@ -93,7 +99,7 @@ class OuvrageDal {
         $id = $cnx->getValue($qry, array());
 
         // On attribue l'ouvrage à un auteur
-        if (preg_match("#[0-9]#",$idAuteur)) {
+        if (preg_match("#[0-9]#", $idAuteur)) {
             $qry = 'INSERT INTO auteur_ouvrage VALUES(?,?)';
             $rq = $cnx->execSQL($qry, array($id, $idAuteur));
             if (is_a($rq, 'PDOException')) {
@@ -219,14 +225,22 @@ class OuvrageDal {
     /**
      * isLendOuvrage indique si l'ouvrage est prêté
      * @param int $no_ouvrage
+     * @param bool $haveBeen
+     *           vrai => vérifie si l'ouvrage à été prêté
+     *           faux => vérifie si l'ouvrage est prêté
      * @return bool retourne
-     *           vrai si l'ouvrage est disponible, 
-     *           faux si l'ouvrage est prêté
+     *           vrai => l'ouvrage à été prêté, 
+     *           faux => l'ouvrage n'à pas été prêté
      */
-    public static function isLendOuvrage($no_ouvrage) {
+    public static function isLendOuvrage($no_ouvrage, $haveBeen = true) {
         $cnx = new PdoDao();
-        $qry = 'SELECT f_dispo_ouvrage(?)';
-        $res = $cnx->execSQL($qry, array($no_ouvrage));
+        $qry = 'SELECT EXISTS(SELECT * FROM';
+        if (!$haveBeen) {
+            $qry .= ' v_prets_en_cours WHERE no_ouvrage = ?)';
+        } else {
+            $qry .= ' pret WHERE no_ouvrage = ?)';
+        }
+        $res = $cnx->getValue($qry, array($no_ouvrage));
         if (is_a($res, 'PDOException')) {
             return PDO_EXCEPTION_VALUE;
         }

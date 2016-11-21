@@ -15,8 +15,6 @@
  * @author 	Baptiste et Alicia ,28/09/2016
  * @version    	1.0
  */
-
-
 /*
  *  ====================================================================
  *  Classe Pret : fabrique d'objets Pret
@@ -29,49 +27,47 @@ require_once ('./modele/Dal/PretDal.class.php');
 require_once ('./modele/App/Application.class.php');
 // sollicite la référence de la classe Pret
 require_once ('./modele/Reference/Pret.class.php');
+// sollicite les méthodes de la classe Ouvrages
+require_once ('./modele/Bll/Ouvrages.class.php');
+// sollicite les méthodes de la classe Clients
+require_once ('./modele/Bll/Clients.class.php');
 
 class Prets {
-
     /**
      * Méthodes publiques
      */
-    
-       /**
-     * r�cup�re les prets
+
+    /**
+     * @author PV
+     * récupére les prets
      * @param   $mode : 0 == tableau assoc, 1 == tableau d'objets
+     *          $etat_pret : voir config.inc.php rubrique "constantes pour la fonction loadGenericPret"
      * @return  un tableau de type $mode 
-     */    
-    public static function chargerLesPrets($mode) {
-        $tab = PretDal::loadGenericPret(0,array(PRETS_EN_COURS));
+     */
+    public static function chargerLesPrets($mode, $etat_pret) {
+        $tab = PretDal::loadGenericPret(0, array($etat_pret));
         if (Application::dataOK($tab)) {
             if ($mode == 1) {
                 $res = array();
                 foreach ($tab as $ligne) {
                     $unPret = new Pret(
-                            $ligne->id_pret, 
-                            $ligne->no_client, 
-                            $ligne->no_ouvrage,
-                            $ligne->date_emp,
-                            $ligne->date_ret,
-                            $ligne->penalite
+                            $ligne->id_pret, Clients::chargerClientParId($ligne->no_client), Ouvrages::chargerOuvrageParId($ligne->no_ouvrage), $ligne->date_emp, $ligne->date_ret, $ligne->penalite
                     );
                     array_push($res, $unPret);
                 }
                 return $res;
-            }
-            else {
+            } else {
                 return $tab;
             }
         }
         return NULL;
     }
 
-
     /**
-     * v�rifie si un pret existe
-     * @param   $id : le code du pret � contr�ler
-     * @return  un bool�en
-     */    
+     * vérifie si un pret existe
+     * @param   $id : le code du pret é contréler
+     * @return  un booléen
+     */
     public static function pretExiste($id) {
         $values = PretDal::loadPretByID($id, 1);
         if (Application::dataOK($values)) {
@@ -79,51 +75,58 @@ class Prets {
         }
         return 0;
     }
-        
-    public static function ajouterPret($valeurs) {
-        $id = PretDal::addPret(
-            $valeurs[0],
-            $valeurs[1],
-            $valeurs[2],
-            $valeurs[3],
-            $valeurs[4]
-        );
-        return self::chargerPretParID($id);
+
+    /**
+     * @author PV
+     * @param int $no_client le numéro du cient emprunteur
+     * @param int $no_ouvrage le numéro de l'ouvrage emprunté
+     * @param date $date_emp la date d'emprunt de l'ouvrage
+     * @return int $result  0 => l'ajout à été normalement effectué
+     *                     -1 => aucun numéro de client n'à été transmis à la procédure
+     *                     -2 => le client n'existe pas
+     *                     -4 => aucun numéro d'ouvrage n'à été transmis à la procédure
+     *                     -6 => l'ouvrage n'existe pas
+     *                     -8 => aucune date d'emprunt transmise à la procédure
+     *                     -10 => l'ouvrage que l'on souhaite emprunté est déjà prêté
+     *                     -99 => La requête à échoué
+     */
+    public static function ajouterPret($no_client, $no_ouvrage, $date_emp) {
+        if (!OuvrageDal::isLendOuvrage($no_ouvrage,false)) {
+            $result = PretDal::addPret($no_client, $no_ouvrage, $date_emp);
+        }
+        else{
+            $result = -10;
+        }
+        return $result;
     }
 
     public static function modifierPret($pret) {
         return PretDal::setPret(
-            $pret->getId(), 
-            $pret->getNoClient(),
-            $pret->getNoOuvrage(),
-            $pret->getDateEmp(),
-            $pret->getDateRet(),
-            $pret->getPenalite()
+                        $pret->getId(), $pret->getNoClient(), $pret->getNoOuvrage(), $pret->getDateEmp(), $pret->getDateRet(), $pret->getPenalite()
         );
-    }    
-    
+    }
+
     public static function supprimerPret($id) {
         return PretDal::delPret($id);
-    }    
-    
+    }
+
     /**
-     * r�cup�re les caract�ristiques d'un pret
+     * récupére les caractéristiques d'un pret
      * @param   $id : le code du pret
      * @return  un objet de la classe pret
      */
     public static function chargerPretParId($id) {
-        $values = PretDal::loadGenericPret(1,array($id));
+        $values = PretDal::loadGenericPret(1, array($id));
         if (Application::dataOK($values)) {
             $id = $values[0]->id_pret;
-            $no_client = $values[0]->no_client;
-            $no_ouvrage = $values[0]->no_ouvrage;
+            $client = Clients::chargerClientParId($values[0]->no_client);
+            $ouvrage = Ouvrages::chargerOuvrageParId($values[0]->no_ouvrage);
             $date_emp = $values[0]->date_emp;
             $date_ret = $values[0]->date_ret;
             $penalite = $values[0]->penalite;
-            return new Auteur ($id, $no_client, $no_ouvrage, $date_emp, $date_ret, $penalite);
+            return new Pret($id, $client, $ouvrage, $date_emp, $date_ret, $penalite);
         }
         return NULL;
     }
-    
-        
+
 }

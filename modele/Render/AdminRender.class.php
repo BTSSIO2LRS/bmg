@@ -1,6 +1,6 @@
 <?php
 
-/** 
+/**
  * 
  * BMG
  * © GroSoft, 2016
@@ -12,13 +12,11 @@
  * @author 	dk
  * @version    	1.0
  */
-
 class AdminRender {
 
     /**
      * Constantes
-    */				
-    
+     */
     // icones et messages d'erreur
     const MSG_SUCCESS = 'b-alert-success f-alert-success';
     const MSG_WARNING = 'b-alert-warning f-alert-warning';
@@ -29,19 +27,19 @@ class AdminRender {
     const ICON_WARNING = 'fa fa-exclamation-circle';
     const ICON_INFO = 'fa fa-info-circle';
     const ICON_QUESTION = 'fa fa-question-circle';
-    const ICON_ERROR = 'fa fa-exclamation-triangle';    
+    const ICON_ERROR = 'fa fa-exclamation-triangle';
 
-    
     /*
      * composant d'affichage d'un message d'erreur
      * @param  $message : le message à afficher
      * @param  $boxStyle : style de massage, voir constantes MSG_
      * @param  $inconStyle : icone, voir contrantes ICON_
-    */
-    static function showMessage($message,$boxStyle,$iconStyle) {
+     */
+
+    static function showMessage($message, $boxStyle, $iconStyle) {
         $component = '';
         $component .= '<div class="';
-        $component .= $boxStyle.'">';
+        $component .= $boxStyle . '">';
         $component .= '<div class="b-remaining">';
         $component .= '<i class="';
         $component .= $iconStyle;
@@ -49,35 +47,35 @@ class AdminRender {
         $component .= $message;
         $component .= '</div></div>';
         return $component;
-    }    
+    }
 
     public static function showNotifications() {
         if (Application::nbNotifications() > 0) {
             foreach ($_SESSION['notifications'] as $notification) {
-                switch($notification->getType()) {
-                    case INFO : { 
-                        $typeMsg = self::MSG_INFO; 
-                        $icon = self::ICON_INFO;
-                    } break;
-                    case ERROR : { 
-                        $typeMsg = self::MSG_ERROR; 
-                        $icon = self::ICON_ERROR;
-                    } break;
-                    case SUCCESS : { 
-                        $typeMsg = self::MSG_SUCCESS; 
-                        $icon = self::ICON_SUCCESS;
-                    } break;
-                    case WARNING : { 
-                        $typeMsg = self::MSG_WARNING; 
-                        $icon = self::ICON_WARNING;
-                    } break;
+                switch ($notification->getType()) {
+                    case INFO : {
+                            $typeMsg = self::MSG_INFO;
+                            $icon = self::ICON_INFO;
+                        } break;
+                    case ERROR : {
+                            $typeMsg = self::MSG_ERROR;
+                            $icon = self::ICON_ERROR;
+                        } break;
+                    case SUCCESS : {
+                            $typeMsg = self::MSG_SUCCESS;
+                            $icon = self::ICON_SUCCESS;
+                        } break;
+                    case WARNING : {
+                            $typeMsg = self::MSG_WARNING;
+                            $icon = self::ICON_WARNING;
+                        } break;
                 }
-                echo self::showMessage($notification->getMsg(),$typeMsg,$icon);
+                echo self::showMessage($notification->getMsg(), $typeMsg, $icon);
             }
             Application::resetNotifications();
         }
-    }    
-    
+    }
+
     /**
      * Affiche une liste de choix à partir d'un jeu de résultat 
      * de la forme {identifiant, libellé}
@@ -88,27 +86,26 @@ class AdminRender {
      * @param string $idSelect : l'élément à présélectionner dans la liste
      * @param string $onchange : le nom de la fonction à appeler 
      * en cas d'événement onchange()
-    */
-    public static function displayList ($tab, $classe, $id, $size, $idSelect, $onchange) {
+     */
+    public static function displayList($tab, $classe, $id, $size, $idSelect, $onchange) {
         // affichage de la liste de choix
-        echo '<select class="'.$classe.'" id="'.$id.'" name="'.$id.'" id="'.$id.'" size="'
-                .$size.'" onchange="'.$onchange . '">';
+        echo '<select class="' . $classe . '" id="' . $id . '" name="' . $id . '" id="' . $id . '" size="'
+        . $size . '" onchange="' . $onchange . '">';
         if (count($tab) && (empty($idSelect))) {
             $idSelect = $tab[0][0];
         }
         foreach ($tab as $ligne) {
             // l'élément en paramètre est présélectionné
             if ($ligne[0] != $idSelect) {
-                echo '<option value="'.$ligne[0].'">'.$ligne[1].'</option>';
-            } 
-            else {
-                echo '<option selected value="'.$ligne[0].'">'.$ligne[1].'</option>';
+                echo '<option value="' . $ligne[0] . '">' . $ligne[1] . '</option>';
+            } else {
+                echo '<option selected value="' . $ligne[0] . '">' . $ligne[1] . '</option>';
             }
         }
         echo '</select>';
         return $idSelect;
     }
-    
+
     /**
      * Retourne une balise img
      * @param   string  $dir : le nom du dossier
@@ -117,59 +114,65 @@ class AdminRender {
      * @param   int     $maxWidth : largeur max de l'image
      * @param   int     $maxHeight : hauteur max de l'image
      * @return string
-    */
+     */
     public static function getImage($dir, $id, $class) {
-        $img = '<img class="'.$class.'" src="';
-        $imgName = $dir.$id.'.jpg';
+        $img = '<img class="' . $class . '" src="';
+        $imgName = $dir . $id . '.jpg';
         if (file_exists($imgName)) {
-            $img .= $imgName.'" alt=""';
-        }
-        else {
-            $img .= NOT_FOUND_IMG.'" alt="Image indisponible"';
+            $img .= $imgName . '" alt=""';
+        } else {
+            $img .= NOT_FOUND_IMG . '" alt="Image indisponible"';
         }
         $img .= ' />';
         return $img;
-    }    
-    
+    }
+
     /**
      * affichAuteurs Affiche un ou des auteurs au format : "Nom Prénom"
      * @param tb $tbAuteur un tableau d'objet de la classe Auteur
      * @param int $nivDetail le niveau de détail de l'auteur (0 => peu détaillé, 1 => détaillé)
+     * @param int $multipleLigne indique si l'on doit passer une ligne à chaque auteur (0 => tous les auteurs sur une ligne,
+     * 1=> 1 auteur par ligne.)
      * @return string une chaine contenante le nom suivit du prénom, et ce pour chaque auteurs
      */
-    public static function affichAuteurs($tbAuteur,$nivDetail)
-    {
+    public static function affichAuteurs($tbAuteur, $nivDetail, $multipleLigne) {
         $strLesAuteurs = "";
         $i = 0;
-        foreach($tbAuteur as $unAut)
-        {         
-            
-            if($nivDetail==0)
-            {
+        foreach ($tbAuteur as $unAut) {
+            if ($nivDetail == 0) {
                 // On va définir la longueur que doit faire notre chaîne
-                $longCoupure = (strlen($unAut->decrireAuteur())-strlen($unAut->getPrenom()))+1;
-            }
-            else{
+                $longCoupure = (strlen($unAut->decrireAuteur()) - strlen($unAut->getPrenom())) + 1;
+            } else {
                 $longCoupure = strlen($unAut->decrireAuteur());
             }
-            
             // on coupe la chaine selon la longueur donné par la variable ci-dessus
-            $chaine = substr($unAut->decrireAuteur(),0,$longCoupure);
-            
-            switch($i)
-            {
-                case 0:
-                    $strLesAuteurs .= $chaine;
+            $chaine = substr($unAut->decrireAuteur(), 0, $longCoupure);
+
+            switch ($i) {
+                case 0: {
+                        $strLesAuteurs .= $chaine; // Le début de la chaîne
+                    }
                     break;
-                case count($tbAuteur):
-                    $strLesAuteurs .= $chaine.".";
+                case count($tbAuteur): {
+                        $strLesAuteurs .= $chaine . "."; // La fin de la chaîne
+                    }
                     break;
-                default : 
-                    $strLesAuteurs .= ", ".$chaine;
+                default : {
+                        if ($multipleLigne == 0) {
+                            $strLesAuteurs .= ", " . $chaine; // Entre chaque auteurs
+                        } else {
+                            $strLesAuteurs .= $chaine; // Entre chaque auteurs
+                        }
+                    }
                     break;
+            }
+
+            if ($multipleLigne == 1 and $i != count($tbAuteur)) {
+                $strLesAuteurs .= "<br>";
             }
             $i++;
         }
         return $strLesAuteurs;
     }
+
 }

@@ -35,11 +35,14 @@ class Ouvrages {
 
     /**
      * récupère les ouvrages
-     * @param   $mode : 0 == tableau assoc, 1 == tableau d'objets
+     * @param int $mode : 0 == tableau assoc, 1 == tableau d'objets
+     * @param bool $checkDispo :
+     *                          false => charge tous les ouvrages
+     *                          true => charge uniquement les ouvrages disponibles (non prêté)
      * @return  un tableau de type $mode 
      */
-    public static function chargerLesOuvrages($mode) {
-        $tab = OuvrageDal::loadOuvrages(1);
+    public static function chargerLesOuvrages($mode, $checkDispo = false) {
+        $tab = OuvrageDal::loadOuvrages(1, $checkDispo);
         if (Application::dataOK($tab)) {
             if ($mode == 1) {
                 $res = array();

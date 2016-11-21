@@ -22,8 +22,8 @@
 
 class Pret {
     private $_id;
-    private $_no_client;
-    private $_no_ouvrage;
+    private $_client;
+    private $_ouvrage;
     private $_date_emp;
     private $_date_ret;
     private $_penalite;
@@ -33,15 +33,15 @@ class Pret {
     */				
     public function __construct(
             $p_id,
-            $p_no_client,
-            $p_no_ouvrage,
+            $p_client,
+            $p_ouvrage,
             $p_date_emp,
             $p_date_ret,
             $p_penalite
     ) {
         $this->setId($p_id);
-        $this->setNoClient($p_no_client);
-        $this->setNoOuvrage($p_no_ouvrage);
+        $this->setClient($p_client);
+        $this->setOuvrage($p_ouvrage);
         $this->setDateEmp($p_date_emp);
         $this->setDateRet($p_date_ret);
         $this->setPenalite($p_penalite);    }  
@@ -54,12 +54,12 @@ class Pret {
         return $this->_id;
     }
 
-    public function getNoClient () {
-        return $this->_no_client;
+    public function getClient () {
+        return $this->_client;
     }
     
-    public function getNoOuvrage () {
-        return $this->_no_ouvrage;
+    public function getOuvrage () {
+        return $this->_ouvrage;
     }
     
     public function getDateEmp () {
@@ -82,12 +82,12 @@ class Pret {
         $this->_id = $p_id;
     }
 
-    public function setNoClient ($p_noClient) {
-        $this->_no_client = $p_noClient;
+    public function setClient ($p_client) {
+        $this->_client = $p_client;
     }
     
-    public function setnoOuvrage ($p_noOuvrage) {
-        $this->_no_ouvrage = $p_noOuvrage;
+    public function setOuvrage ($p_ouvrage) {
+        $this->_ouvrage = $p_ouvrage;
     }
     
     public function setDateEmp ($p_dateEmp) {
